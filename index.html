@@ -534,25 +534,29 @@
                 });
                 
                 if (isValid) {
-                    // Preparar os dados do formulário
-                    const formData = new FormData(form);
-                    const formObject = {};
-                    formData.forEach((value, key) => {
-                        formObject[key] = value;
-                    });
-                    
-                    // Enviar por email usando EmailJS (requer configuração prévia)
-                    emailjs.send('service_6u76dxo', 'template_2joqmrn', formObject)
-                        .then(function(response) {
-                            console.log('SUCCESS!', response.status, response.text);
-                            successMessage.style.display = 'block';
-                            form.reset();
-                            
-                            // Rolar para a mensagem de sucesso
-                            window.scrollTo({
-                                top: successMessage.offsetTop - 100,
-                                behavior: 'smooth'
-                            });
+    // 1. Tenta primeiro o EmailJS
+    emailjs.sendForm('service_6u76dxo', 'template_2joqmrn', this)
+        .then(() => {
+            // 2. Só mostra sucesso SE o EmailJS funcionar
+            alert('✅ Candidatura enviada com sucesso via sistema!');
+            this.reset();
+        })
+        .catch(async (error) => {
+            console.error("Erro EmailJS:", error);
+            
+            // 3. Fallback SILENCIOSO (sem popup de erro)
+            try {
+                await new Promise(resolve => setTimeout(resolve, 1000)); // Pequeno delay
+                const mailtoBody = `Nome: ${this.nome.value}%0D%0AEmail: ${this.email.value}%0D%0ATelefone: ${this.telefone.value}%0D%0AMotivação: ${this.motivacao.value}`;
+                window.location.href = `mailto:crystal.roleplay.25@gmail.com?subject=Candidatura DPCRP&body=${mailtoBody}`;
+                
+                // 4. Mensagem única APÓS redirecionamento
+                alert('📧 Caso o e-mail não abra automaticamente, copie os dados e envie manualmente para: crystal.roleplay.25@gmail.com');
+            } catch (fallbackError) {
+                console.error("Erro no fallback:", fallbackError);
+            }
+        });
+}
                             
                             // Alternativa: enviar para o email diretamente (caso EmailJS não esteja configurado)
                             const mailtoLink = `mailto:crystal.roleplay.25@gmail.com?subject=Nova Candidatura DPCRP&body=Nome: ${formObject.nome}%0D%0AEmail: ${formObject.email}%0D%0ATelefone: ${formObject.telefone}%0D%0AData Nascimento: ${formObject['data-nascimento']}%0D%0AExperiência: ${formObject.experiencia}%0D%0AMotivação: ${formObject.motivacao}`;
