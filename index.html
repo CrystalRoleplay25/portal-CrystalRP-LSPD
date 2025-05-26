@@ -377,7 +377,7 @@
                  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
     <div>
         <label for="email">Email *</label>
-        <input type="email" id="email" name="email" required>
+        <input type="email" id="email" name="email" required style="...">
     </div>
                         <div>
                             <label for="telefone" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Telefone *</label>
@@ -397,7 +397,14 @@
         </label>
     </div>
 </div>
-                    
+      <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+  <label style="display: flex; align-items: center; gap: 0.5rem;">
+    <input type="radio" name="experiencia" value="Sim" required> Sim
+  </label>
+  <label style="display: flex; align-items: center; gap: 0.5rem;">
+    <input type="radio" name="experiencia" value="Não"> Não
+  </label>
+</div>              
                     <div>
                         <label for="motivacao" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Motivação para ingressar na DPCRP *</label>
                         <textarea id="motivacao" name="motivacao" rows="5" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;" required></textarea>
@@ -406,9 +413,9 @@
                 
                 <div style="margin: 1.5rem 0;">
     <label style="display: flex; align-items: center; gap: 0.5rem;">
-        <input type="checkbox" name="declaracao" required>
-        Declaro que todas as informações são verdadeiras.
-    </label>
+  <input type="checkbox" name="declaracao" required>
+  Declaro que as informações são verdadeiras.
+</label>
 </div>
                 
                 <button type="submit" class="btn" style="justify-self: start;">ENVIAR CANDIDATURA</button>
@@ -600,68 +607,34 @@
     <!-- Adicione o SDK do EmailJS -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-    // 1. Inicialização robusta do EmailJS
-    emailjs.init('w_N4oJ960VgSnclDW', {
-        blockHeadless: false // Permite testes locais
+  // 1. Inicialização
+  emailjs.init('w_N4oJ960VgSnclDW');
+
+  document.getElementById('recruitmentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // 2. Validação
+    const isValid = Array.from(this.elements).every(el => {
+      if (el.required && !el.value) {
+        el.style.borderColor = el.type === 'checkbox' ? 'red' : 'var(--police-red)';
+        return false;
+      }
+      return true;
     });
 
-    document.getElementById('recruitmentForm').addEventListener('submit', async function(e) {
-        e.preventDefault();
-        
-        // 2. Validação dos campos (original mantido)
-        let isValid = true;
-        document.querySelectorAll('[required]').forEach(field => {
-            if (!field.value.trim()) {
-                field.style.borderColor = 'var(--police-red)';
-                isValid = false;
-            }
-        });
+    if (!isValid) return;
 
-        if (!isValid) {
-            alert('⚠️ Preencha todos os campos obrigatórios!');
-            return;
-        }
-
-        // 3. Feedback visual durante o envio
-        const submitBtn = this.querySelector('button[type="submit"]');
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Enviando...';
-
-        try {
-            // 4. Tentativa PRINCIPAL com EmailJS
-            const response = await emailjs.sendForm(
-                'service_6u76dxo',
-                'template_2joqmrn',
-                this
-            );
-            
-            // 5. SÓ MOSTRA SUCESSO SE O EMAILJS CONFIRMAR (status 200)
-            if (response.status === 200) {
-                alert('✅ Candidatura enviada com sucesso via sistema!');
-                this.reset();
-            } else {
-                throw new Error('Resposta inesperada do EmailJS');
-            }
-
-        } catch (error) {
-            console.error("Erro no EmailJS:", error);
-            
-            // 6. Fallback SILENCIOSO para mailto:
-            const mailtoBody = `
-                Nome: ${this.nome.value}%0D%0A
-                Email: ${this.email.value}%0D%0A
-                Telefone: ${this.telefone.value}%0D%0A
-                Motivação: ${this.motivacao.value}
-            `.replace(/\s+/g, ' ').trim();
-            
-            window.location.href = `mailto:crystal.roleplay.25@gmail.com?subject=Candidatura DPCRP&body=${mailtoBody}`;
-            
-        } finally {
-            // 7. Restaura o botão
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'ENVIAR CANDIDATURA';
-        }
-    });
+    // 3. Envio pelo EmailJS
+    emailjs.sendForm('service_6u76dxo', 'template_2joqmrn', this)
+      .then(() => {
+        alert('✅ Formulário enviado com sucesso!');
+        this.reset();
+      })
+      .catch(error => {
+        console.error("Falha no EmailJS:", error);
+        alert("⚠️ Erro ao enviar. Tente novamente mais tarde.");
+      });
+  });
 </script>
 </body>
 </html>
