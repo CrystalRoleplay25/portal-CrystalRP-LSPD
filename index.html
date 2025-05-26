@@ -633,5 +633,40 @@
       });
   });
 </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+<script>
+  // 1. Inicialize o EmailJS (substitua com sua Public Key)
+  emailjs.init('w_N4oJ960VgSnclDW');
+
+  // 2. Adicione o event listener para o formulário
+  document.getElementById('recruitmentForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // 3. Coletar os dados do formulário
+    const formData = new FormData(this);
+    
+    // 4. Preparar os parâmetros para o EmailJS
+    const emailParams = {
+      nome: formData.get('nome'),
+      "data-nascimento": formData.get('data-nascimento'),
+      email: formData.get('email'),
+      telefone: formData.get('telefone'),
+      experiencia: formData.get('experiencia'),
+      motivacao: formData.get('motivacao'),
+      submission_date: new Date().toLocaleString()
+    };
+
+    // 5. Enviar o email (substitua com seus IDs)
+    emailjs.send('service_6u76dxo', 'template_2joqmrn', emailParams)
+      .then(function(response) {
+        alert('Candidatura enviada com sucesso!');
+        document.getElementById('recruitmentForm').reset();
+      }, function(error) {
+        alert('Ocorreu um erro. Por favor, tente novamente.');
+        console.error('Erro:', error);
+      });
+  });
+</script>
 </body>
 </html>
