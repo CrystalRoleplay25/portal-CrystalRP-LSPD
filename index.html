@@ -597,5 +597,38 @@
     </script>
     <!-- Adicione o SDK do EmailJS -->
     <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
+<script>
+    // 1. INICIALIZAÇÃO DO EMAILJS (seus IDs configurados)
+    emailjs.init('w_N4oJ960VgSnclDW');
+
+    // 2. ENVIO DO FORMULÁRIO (sem alterar o HTML existente)
+    document.getElementById('recruitmentForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        // Validação original (mantida intacta)
+        let isValid = true;
+        document.querySelectorAll('[required]').forEach(field => {
+            if (!field.value.trim()) {
+                field.style.borderColor = 'var(--police-red)';
+                isValid = false;
+            }
+        });
+
+        if (isValid) {
+            // Envio via EmailJS (seus IDs inseridos)
+            emailjs.sendForm('service_6u76dxo', 'template_2joqmrn', this)
+                .then(() => {
+                    alert('✅ Candidatura enviada!');
+                    this.reset();
+                })
+                .catch((error) => {
+                    console.error("Erro EmailJS:", error);
+                    // Fallback para mailto: (original mantido)
+                    const mailtoLink = `mailto:crystal.roleplay.25@gmail.com?subject=Candidatura DPCRP&body=Nome: ${this.nome.value}%0D%0AEmail: ${this.email.value}%0D%0ATelefone: ${this.telefone.value}%0D%0AMotivação: ${this.motivacao.value}`;
+                    window.location.href = mailtoLink;
+                });
+        }
+    });
+</script>
 </body>
 </html>
