@@ -596,12 +596,15 @@
         });
     </script>
     <!-- Adicione o SDK do EmailJS -->
-    <script src="https://cdn.jsdelivr.net/npm/emailjs-com@2.6.4/dist/email.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-    // 1. INICIALIZAÇÃO DO EMAILJS (seus IDs configurados)
-    emailjs.init('w_N4oJ960VgSnclDW');
+    // 1. INICIALIZAÇÃO ATUALIZADA
+    emailjs.init('w_N4oJ960VgSnclDW', {
+        blockHeadless: true,
+        limitRate: { id: 'recruitment', throttle: 10000 }
+    });
 
-    // 2. ENVIO DO FORMULÁRIO (sem alterar o HTML existente)
+    // 2. ENVIO DO FORMULÁRIO (original mantido)
     document.getElementById('recruitmentForm').addEventListener('submit', function(e) {
         e.preventDefault();
         
@@ -615,7 +618,6 @@
         });
 
         if (isValid) {
-            // Envio via EmailJS (seus IDs inseridos)
             emailjs.sendForm('service_6u76dxo', 'template_2joqmrn', this)
                 .then(() => {
                     alert('✅ Candidatura enviada!');
