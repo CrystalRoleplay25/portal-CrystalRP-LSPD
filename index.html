@@ -376,8 +376,8 @@
                     
                  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
     <div>
-        <label for="email">Email *</label>
-        <input type="email" id="email" name="email" required style="...">
+        <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Email *</label>
+        <input type="tel" id="email" name="email" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;" required>
     </div>
                         <div>
                             <label for="telefone" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Telefone *</label>
@@ -396,15 +396,7 @@
             <input type="radio" name="experiencia" value="nao"> Não
         </label>
     </div>
-</div>
-      <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
-  <label style="display: flex; align-items: center; gap: 0.5rem;">
-    <input type="radio" name="experiencia" value="Sim" required> Sim
-  </label>
-  <label style="display: flex; align-items: center; gap: 0.5rem;">
-    <input type="radio" name="experiencia" value="Não"> Não
-  </label>
-</div>              
+</div>           
                     <div>
                         <label for="motivacao" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Motivação para ingressar na DPCRP *</label>
                         <textarea id="motivacao" name="motivacao" rows="5" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;" required></textarea>
