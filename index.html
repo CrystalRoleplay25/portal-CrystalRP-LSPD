@@ -602,17 +602,15 @@
     <!-- Adicione o SDK do EmailJS -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-    // 1. INICIALIZAÇÃO ATUALIZADA
+    // 1. Inicialização robusta do EmailJS
     emailjs.init('w_N4oJ960VgSnclDW', {
-        blockHeadless: true,
-        limitRate: { id: 'recruitment', throttle: 10000 }
+        blockHeadless: false // Permite testes locais
     });
 
-    // 2. ENVIO DO FORMULÁRIO (original mantido)
-    document.getElementById('recruitmentForm').addEventListener('submit', function(e) {
+    document.getElementById('recruitmentForm').addEventListener('submit', async function(e) {
         e.preventDefault();
         
-        // Validação original (mantida intacta)
+        // 2. Validação dos campos (original mantido)
         let isValid = true;
         document.querySelectorAll('[required]').forEach(field => {
             if (!field.value.trim()) {
@@ -621,18 +619,49 @@
             }
         });
 
-        if (isValid) {
-            emailjs.sendForm('service_6u76dxo', 'template_2joqmrn', this)
-                .then(() => {
-                    alert('✅ Candidatura enviada!');
-                    this.reset();
-                })
-                .catch((error) => {
-                    console.error("Erro EmailJS:", error);
-                    // Fallback para mailto: (original mantido)
-                    const mailtoLink = `mailto:crystal.roleplay.25@gmail.com?subject=Candidatura DPCRP&body=Nome: ${this.nome.value}%0D%0AEmail: ${this.email.value}%0D%0ATelefone: ${this.telefone.value}%0D%0AMotivação: ${this.motivacao.value}`;
-                    window.location.href = mailtoLink;
-                });
+        if (!isValid) {
+            alert('⚠️ Preencha todos os campos obrigatórios!');
+            return;
+        }
+
+        // 3. Feedback visual durante o envio
+        const submitBtn = this.querySelector('button[type="submit"]');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Enviando...';
+
+        try {
+            // 4. Tentativa PRINCIPAL com EmailJS
+            const response = await emailjs.sendForm(
+                'service_6u76dxo',
+                'template_2joqmrn',
+                this
+            );
+            
+            // 5. SÓ MOSTRA SUCESSO SE O EMAILJS CONFIRMAR (status 200)
+            if (response.status === 200) {
+                alert('✅ Candidatura enviada com sucesso via sistema!');
+                this.reset();
+            } else {
+                throw new Error('Resposta inesperada do EmailJS');
+            }
+
+        } catch (error) {
+            console.error("Erro no EmailJS:", error);
+            
+            // 6. Fallback SILENCIOSO para mailto:
+            const mailtoBody = `
+                Nome: ${this.nome.value}%0D%0A
+                Email: ${this.email.value}%0D%0A
+                Telefone: ${this.telefone.value}%0D%0A
+                Motivação: ${this.motivacao.value}
+            `.replace(/\s+/g, ' ').trim();
+            
+            window.location.href = `mailto:crystal.roleplay.25@gmail.com?subject=Candidatura DPCRP&body=${mailtoBody}`;
+            
+        } finally {
+            // 7. Restaura o botão
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'ENVIAR CANDIDATURA';
         }
     });
 </script>
