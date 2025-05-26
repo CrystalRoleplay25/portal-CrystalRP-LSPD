@@ -374,11 +374,11 @@
                         </div>
                     </div>
                     
-                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
-                        <div>
-                            <label for="email" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Email *</label>
-                            <input type="email" id="email" name="email" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;" required>
-                        </div>
+                 <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1rem;">
+    <div>
+        <label for="email">Email *</label>
+        <input type="email" id="email" name="email" required>
+    </div>
                         <div>
                             <label for="telefone" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Telefone *</label>
                             <input type="tel" id="telefone" name="telefone" style="width: 100%; padding: 0.8rem; border: 1px solid #ddd; border-radius: 4px;" required>
@@ -386,19 +386,17 @@
                     </div>
                 </div>
                 
-                <div style="display: grid; gap: 1rem;">
-                    <h3 style="color: var(--police-blue);">INFORMAÇÕES ADICIONAIS</h3>
-                    <div>
-                        <label for="experiencia" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Tem experiência anterior em forças policiais? *</label>
-                        <div style="display: flex; gap: 1rem;">
-                            <label style="display: flex; align-items: center; gap: 0.5rem;">
-                                <input type="radio" name="experiencia" value="sim" required> Sim
-                            </label>
-                            <label style="display: flex; align-items: center; gap: 0.5rem;">
-                                <input type="radio" name="experiencia" value="nao"> Não
-                            </label>
-                        </div>
-                    </div>
+                <div style="margin-top: 1rem;">
+    <label for="experiencia">Tem experiência anterior em forças policiais? *</label>
+    <div style="display: flex; gap: 1rem; margin-top: 0.5rem;">
+        <label style="display: flex; align-items: center; gap: 0.5rem;">
+            <input type="radio" name="experiencia" value="sim" required> Sim
+        </label>
+        <label style="display: flex; align-items: center; gap: 0.5rem;">
+            <input type="radio" name="experiencia" value="nao"> Não
+        </label>
+    </div>
+</div>
                     
                     <div>
                         <label for="motivacao" style="display: block; margin-bottom: 0.5rem; font-weight: bold;">Motivação para ingressar na DPCRP *</label>
@@ -407,11 +405,11 @@
                 </div>
                 
                 <div style="margin: 1.5rem 0;">
-                    <label style="display: flex; gap: 0.5rem;">
-                        <input type="checkbox" name="declaracao" required>
-                        Declaro que todas as informações fornecidas são verdadeiras e estou ciente que falsas declarações podem resultar na desqualificação da minha candidatura.
-                    </label>
-                </div>
+    <label style="display: flex; align-items: center; gap: 0.5rem;">
+        <input type="checkbox" name="declaracao" required>
+        Declaro que todas as informações são verdadeiras.
+    </label>
+</div>
                 
                 <button type="submit" class="btn" style="justify-self: start;">ENVIAR CANDIDATURA</button>
                 <div id="successMessage" class="success-message">Candidatura enviada com sucesso!</div>
