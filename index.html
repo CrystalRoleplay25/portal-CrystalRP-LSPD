@@ -607,32 +607,37 @@
     <!-- Adicione o SDK do EmailJS -->
     <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
 <script>
-  // 1. Inicialização
-  emailjs.init('w_N4oJ960VgSnclDW');
+  // 1. INICIALIZAÇÃO CORRETA (com Public Key)
+  (function() {
+    emailjs.init({
+      publicKey: "w_N4oJ960VgSnclDW", // Sua Public Key
+      blockHeadless: true,
+    });
+  })();
 
+  // 2. ENVIO DO FORMULÁRIO
   document.getElementById('recruitmentForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
-    // 2. Validação
-    const isValid = Array.from(this.elements).every(el => {
-      if (el.required && !el.value) {
-        el.style.borderColor = el.type === 'checkbox' ? 'red' : 'var(--police-red)';
-        return false;
-      }
-      return true;
-    });
+    // Validação
+    const submitBtn = e.target.querySelector('button[type="submit"]');
+    submitBtn.disabled = true;
+    submitBtn.textContent = 'Enviando...';
 
-    if (!isValid) return;
-
-    // 3. Envio pelo EmailJS
-    emailjs.sendForm('service_6u76dxo', 'template_2joqmrn', this)
-      .then(() => {
-        alert('✅ Formulário enviado com sucesso!');
-        this.reset();
+    // Envio via EmailJS
+    emailjs.sendForm('service_6u76dxo', 'template_2joqmrn', e.target)
+      .then((response) => {
+        console.log('SUCCESS!', response.status, response.text);
+        alert('✅ Candidatura enviada com sucesso!');
+        e.target.reset();
       })
-      .catch(error => {
-        console.error("Falha no EmailJS:", error);
-        alert("⚠️ Erro ao enviar. Tente novamente mais tarde.");
+      .catch((error) => {
+        console.error('FAILED...', error);
+        alert('⚠️ Erro ao enviar. Por favor, tente novamente.');
+      })
+      .finally(() => {
+        submitBtn.disabled = false;
+        submitBtn.textContent = 'ENVIAR CANDIDATURA';
       });
   });
 </script>
